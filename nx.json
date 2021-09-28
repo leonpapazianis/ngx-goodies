@@ -33,6 +33,9 @@
     "app-e2e": {
       "tags": [],
       "implicitDependencies": ["app"]
+    },
+    "store-utilities": {
+      "tags": []
     }
   }
 }
