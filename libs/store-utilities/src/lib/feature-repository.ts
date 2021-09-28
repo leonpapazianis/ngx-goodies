@@ -25,7 +25,7 @@ export class FeatureRepository<T> {
       : (stateLocator as MemoizedSelector<any, T>);
   }
 
-  protected getState(): Observable<T> {
+  public getState(): Observable<T> {
     return this.store$.pipe(
       select(createSelector(this.featureSelector, (state: T) => state))
     );

@@ -3,7 +3,6 @@ import { createFeatureSelector, Store } from '@ngrx/store';
 import { FeatureRepository } from './feature-repository';
 import { Injectable } from '@angular/core';
 import { cold } from 'jasmine-marbles';
-import { map } from 'rxjs/operators';
 import { provideMockStore } from '@ngrx/store/testing';
 interface TestState {
   testProp: string;
@@ -18,18 +17,12 @@ class TestFeatureRepositoryService extends FeatureRepository<TestState> {
   constructor(protected store$: Store<TestState>) {
     super(store$, featureStateKey);
   }
-  public getTestProp() {
-    return this.getState().pipe(map((state: TestState) => state.testProp));
-  }
 }
 
 @Injectable()
 class TestFeatureRepositoryWithSelectorService extends FeatureRepository<TestState> {
   constructor(protected store$: Store<TestState>) {
     super(store$, testSelector);
-  }
-  public getTestProp() {
-    return this.getState().pipe(map((state: TestState) => state.testProp));
   }
 }
 
@@ -47,7 +40,7 @@ describe('FeatureRepository', () => {
           initialState: {
             [featureStateKey]: initialState
           }
-        })
+        }),
       ]
     });
   });
@@ -58,16 +51,22 @@ describe('FeatureRepository', () => {
     );
   });
   describe('When using the repository with the string based stateLocator', () => {
-    it('Should return the value of the testProp', () => {
-      expect(repository.getTestProp()).toBeObservable(
-        cold('a', { a: initialState.testProp })
+    it('Should be a FeatureRepository', () => {
+      expect(repository instanceof FeatureRepository).toBeTruthy();
+    });
+    it('Should return the state', () => {
+      expect(repository.getState()).toBeObservable(
+        cold('a', { a: initialState })
       );
     });
   });
   describe('When using the repository with the selector based stateLocator', () => {
-    it('Should return the value of the testProp', () => {
-      expect(repositoryWithSelector.getTestProp()).toBeObservable(
-        cold('a', { a: initialState.testProp })
+    it('Should be a FeatureRepository', () => {
+      expect(repositoryWithSelector instanceof FeatureRepository).toBeTruthy();
+    })
+    it('Should return the state', () => {
+      expect(repositoryWithSelector.getState()).toBeObservable(
+        cold('a', { a: initialState })
       );
     });
   });
